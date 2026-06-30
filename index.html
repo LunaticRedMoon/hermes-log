@@ -10,11 +10,15 @@
 <header>
   <h1>📜 Hermes 对话记录</h1>
   <div class="search-box">
-    <input type="text" id="search" placeholder="搜索对话..." autocomplete="off">
+    <input type="text" id="search" placeholder="搜索对话或技能..." autocomplete="off">
   </div>
+  <nav class="tabs">
+    <button class="tab active" data-view="conversations">💬 对话</button>
+    <button class="tab" data-view="skills">🛠️ 技能</button>
+  </nav>
 </header>
 <main>
-  <div id="conv-list">
+  <div id="conv-list" class="view active">
     <h2 class="month-heading">📅 2026-07</h2>
     <a href="c/2026-07-01_0230_对话记录保存与回顾.html" class="conv-card">
       <div class="conv-title">对话记录保存与回顾</div>
@@ -52,6 +56,19 @@
   </div>
   <div id="no-results" style="display:none">
     <p>😕 没有找到匹配的对话</p>
+  </div>
+  <div id="skill-list" class="view">
+    <div class="skill-intro">共 <strong>2</strong> 个 Skill</div>
+    <a href="c/2026-07-01_0030_学习创建Skill.html" class="skill-card">
+      <div class="skill-name">🛠️ shenzhen-weather</div>
+      <div class="skill-desc">查询深圳南山区当前天气和3天预报</div>
+      <div class="skill-source">📄 学习创建 Hermes Skill：深圳天气查询 · 2026-07-01</div>
+    </a>
+    <a href="c/2026-06-30_2235_对话记录方案设计.html" class="skill-card">
+      <div class="skill-name">🛠️ conversation-log-save</div>
+      <div class="skill-desc">保存对话并部署到 GitHub Pages 静态站点</div>
+      <div class="skill-source">📄 Hermes 对话记录方案设计 &amp; 首次实现 · 2026-06-30</div>
+    </a>
   </div>
 </main>
 <script src="script.js"></script>
