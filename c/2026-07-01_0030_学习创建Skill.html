@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学习创建 Hermes Skill：深圳天气查询 — Hermes 对话记录</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="back-link">← 返回列表</a>
+  <h1>学习创建 Hermes Skill：深圳天气查询</h1>
+  <div class="meta">
+    <span class="date">📅 2026-07-01 00:30</span>
+    <span class="tag">skill</span> <span class="tag">教程</span> <span class="tag">天气</span> <span class="tag">对话记录</span>
+  </div>
+</header>
+<main class="conversation">
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">我想练习一下创建一个skill<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">加载了 <code>hermes-agent-skill-authoring</code> 指南，介绍了 Skill 的两种存放位置（用户本地 / 项目仓库）和核心要素（YAML头 + 触发条件 + 步骤 + 坑）。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">先创建一个简单的，例如查询深圳南山区未来几天的天气<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">验证了 wttr.in 和 Open-Meteo 两个免费 API 都能通，然后创建了 <code>shenzhen-weather</code> skill：<br><br>- <strong>name:</strong> shenzhen-weather<br>- <strong>数据源:</strong> wttr.in（当前）+ Open-Meteo（3天预报）<br>- <strong>关键细节:</strong> 用 execute_code 而非 terminal（避免超时）、南山坐标 22.54,113.95、WMO 天气码映射<br><br>实测发现 code96 未映射，立即用 patch 修复。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">查一下深圳天气<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">Skill 自动匹配 → 加载 → 执行，返回当前 28°C 阵雨 + 未来三天雷暴预报。用户只需说"深圳天气"即可触发，不需要精确口令。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">我想看看 skill 文件内容<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">展示了文件路径：<code>~/.hermes/skills/productivity/shenzhen-weather/SKILL.md</code>（101行纯文本 Markdown）<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">创建 skill 前后有什么区别？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">对比：没 skill 时每次都要试错（API选哪个、工具用哪个、坐标多少、天气码怎么翻译）；有 skill 后直接走最优路径，零思考。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">对话何时算结束？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">建议按"话题"分界：问题解决 + 无追问时算话题结束。当前方案合理，日后可修改。</div></div>
+</main>
+<script src="../script.js"></script>
+</body>
+</html>
