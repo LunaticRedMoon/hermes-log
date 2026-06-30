@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对话记录保存与回顾 — Hermes 对话记录</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="back-link">← 返回列表</a>
+  <h1>对话记录保存与回顾</h1>
+  <div class="meta">
+    <span class="date">📅 2026-07-01 02:30</span>
+    <span class="tag">对话记录</span> <span class="tag">回顾</span> <span class="tag">导出</span>
+  </div>
+</header>
+<main class="conversation">
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (02:30)</div><div class="content">我在这里的对话呢？也是保留的吗？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (02:30)</div><div class="content">是的，这里的对话都会保留：<br><br>1. <strong>会话记忆</strong> — 每个对话 session 都会被记录下来，可以通过 <code>session_search</code> 在未来回查。即使过了很久，只要你还记得大概聊过什么话题，我就能帮你找到。<br><br>2. <strong>长期记忆</strong> — 我在对话中遇到的、你认为重要的信息（偏好、环境、项目约定等），会存入 <code>memory</code> 持久保存，下次对话自动注入。<br><br>3. <strong>你的记录网站</strong> — 你之前部署的 https://lunaticredmoon.github.io/hermes-log/ 会把每次对话结束后自动保存并发布，手机电脑都能看，还带搜索。<br><br>所以不用担心，我们的对话不会丢。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (02:30)</div><div class="content">恩，你看看，并随便导出一段<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (02:31)</div><div class="content">有 2 个历史对话记录。导出最长的那场（221 条消息，QQ 来的「你是？」）：<br><br><strong>对话分两段保存：</strong><br><br>📄 <strong>第一部分</strong> — <code>~/hermes-conversations/conversations/2026-06/2026-06-30_2235_对话记录方案设计.md</code><br>> 78 行，标签：入门、对话记录、静态网站、GitHub Pages<br><br>📄 <strong>第二部分</strong> — <code>~/hermes-conversations/conversations/2026-06/2026-06-30_2300_GitHub部署调试.md</code><br>> 79 行，标签：GitHub Pages、部署、调试、自动化<br><br><strong>精彩片段摘录：</strong><br><br>```</div></div>
+<div class="message msg-user"><div class="role">👤 用户 (22:35)</div><div class="content">你是？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (22:35)</div><div class="content">我是 Hermes，你的 AI 助手 🤖<br>由 Nous Research 打造，运行在 QQ 平台上...<br>``<code><br><br>然后用户给了三个方案（A 本地 Markdown、B Obsidian、C 流水账），选了方案 A 加静态网站。到部署阶段就很热闹了——git 没装、gh CLI 也没装、API 超时、中文文件名导致构建失败、Pages 模式切来切去……最后靠 Python urllib 直接调 GitHub Git Data API 原子提交才搞定。<br><br><strong>经典片段：</strong><br><br></code>``</div></div>
+<div class="message msg-user"><div class="role">👤 用户 (23:10)</div><div class="content">https://lunaticredmoon.github.io/hermes-log/ 打不开<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (23:10)</div><div class="content">检查 GitHub API：Pages status = "built"，所有资源返回 200。<br>截图确认页面正常。<br>可能原因：DNS/CDN 延迟、浏览器缓存...<br>```<br><br>结果是能打开的，虚惊一场 😄<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (02:32)</div><div class="content">好的，请保存这一次的对话记录<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (02:32)</div><div class="content">正在保存本次对话 → 生成静态网站 → 部署到 GitHub Pages...</div></div>
+</main>
+<script src="../script.js"></script>
+</body>
+</html>
