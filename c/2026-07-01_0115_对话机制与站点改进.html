@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对话机制探讨 &amp; 站点技能目录改进 — Hermes 对话记录</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="back-link">← 返回列表</a>
+  <h1>对话机制探讨 &amp; 站点技能目录改进</h1>
+  <div class="meta">
+    <span class="date">📅 2026-07-01 01:15</span>
+    <span class="tag">session</span> <span class="tag">对话记录</span> <span class="tag">skill</span> <span class="tag">站点改进</span>
+    <span class="skill-badge" title="新增「创建的 Skill」字段追踪">🛠️ conversation-log-save（改进）</span>
+  </div>
+</header>
+<main class="conversation">
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">有意思，刚刚在Terminal里有过一段对话并有记录，但这里却没有记忆，却有另外几次QQ的记录，为什么会这样？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">解释了不同入口 = 不同 session，Terminal 的对话在另一个 session 里，需要通过 session_search 跨 session 查找。发现 Terminal 对话其实已被保存为第4条记录。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">对话保存是基于 session 的吗？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">不是。Session 是系统自动的，保存是我手动判断"话题结束"时执行的。保存的内容来自 session，但时机由我判断。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">会不会未来某个时候你会忘记做对话存储？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">有可能，但有三重保险：memory 记住有这回事、技能列表里有 conversation-log-save、你可以提醒。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">conversation-log-save 是你自建的 skill？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">对，和 shenzhen-weather 一样是本地 skill，创建于搭建对话记录系统时。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">需要改进 conversation-log-save，增加栏目记录生成的本地 skill 及描述。<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">改了三层：Markdown 格式新增 <code><strong>创建的 Skill</strong>:</code> 字段 → build.py 解析并展示 → 历史文件回溯补充。站点首页卡片上出现绿色 🛠️ 徽章。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">看到效果了，但对话很长时难定位特定 skill。能否增加栏目专门列出 skill 并反向定位？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">实现了双视图切换：首页顶部新增「💬 对话 | 🛠️ 技能」标签。技能视图汇总所有 skill（名称、描述、来源），点击跳转到对应对话。搜索也联动切换。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">好的，接下来要创建一系列定时任务，以上对话可以保存了</div></div>
+</main>
+<script src="../script.js"></script>
+</body>
+</html>
