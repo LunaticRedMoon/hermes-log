@@ -30,7 +30,8 @@
     // 过滤
     const matched = new Set();
     index.forEach((c, i) => {
-      const text = (c.title + ' ' + c.tags.join(' ')).toLowerCase();
+      const skillNames = (c.skills || []).map(s => s.name).join(' ');
+      const text = (c.title + ' ' + c.tags.join(' ') + ' ' + skillNames).toLowerCase();
       if (text.includes(q)) matched.add(c.path);
     });
 
