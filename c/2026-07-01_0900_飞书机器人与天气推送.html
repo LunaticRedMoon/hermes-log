@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>飞书机器人接入 &amp; 首个定时天气推送 — Hermes 对话记录</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="back-link">← 返回列表</a>
+  <h1>飞书机器人接入 &amp; 首个定时天气推送</h1>
+  <div class="meta">
+    <span class="date">📅 2026-07-01 09:00</span>
+    <span class="tag">飞书</span> <span class="tag">webhook</span> <span class="tag">cron</span> <span class="tag">定时任务</span> <span class="tag">天气</span>
+    <span class="skill-badge" title="通过 Webhook 向飞书群发送文本和富文本卡片消息">🛠️ feishu-messenger</span>
+  </div>
+</header>
+<main class="conversation">
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">需要创建飞书机器人，将定时任务报告发布到群里。<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">检查 Hermes 现有集成——只有 QQ，飞书需要从零搭建。提出三步方案：创建应用 → 获取凭证 → 发消息。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">飞书提示可以通过 webhook 地址调用机器人，给了 webhook URL。<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">Webhook 方式更简单——不需要 App ID/Secret。测试发送文本消息，成功（code=0）。<br><br>保存凭证到 <code>~/hermes-conversations/.feishu.env</code>，创建 <code>feishu-messenger</code> skill，支持纯文本和交互式卡片两种消息类型。发送了绿色富文本卡片验证。<br></div></div>
+<div class="message msg-user"><div class="role">👤 用户</div><div class="content">创建第一个定时任务：每天 7:30 推送深圳南山区天气。<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes</div><div class="content">编写了独立脚本 <code>weather-report.py</code>，但 terminal 工具无法访问外网。改用 cron agent 模式 + skills。<br><br>过程中发现 wttr.in 在沙箱里不稳定，改用纯 Open-Meteo API（含 current 参数），端到端验证成功——天气数据 → 飞书卡片推送。<br><br><strong>定时任务配置：</strong><br>- 名称：南山天气推送<br>- 调度：<code>30 7 <em> </em> *</code>（每天 7:30）<br>- 数据源：Open-Meteo（当前天气 + 3天预报）<br>- 输出：飞书交互式卡片（wathet 模板，含当前温度/湿度/风速 + 未来三天预报）<br>- 下次运行：2026-07-02 07:30</div></div>
+</main>
+<script src="../script.js"></script>
+</body>
+</html>
