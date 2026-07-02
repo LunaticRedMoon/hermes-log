@@ -1,5 +1,24 @@
 [
   {
+    "title": "SOUL规则扩展、对话记录修复与Clash代理配置",
+    "date": "2026-07-03 03:56",
+    "tags": [
+      "SOUL.md",
+      "对话记录",
+      "build.py",
+      "Clash代理",
+      "网络配置",
+      "调试"
+    ],
+    "skills": [
+      {
+        "name": "conversation-log-save（改进）",
+        "desc": "新增空白行导致 frontmatter 解析失败的 pitfall"
+      }
+    ],
+    "path": "2026-07/2026-07-03_0356_SOUL规则扩展、对话记录修复与Clash代理配置.md"
+  },
+  {
     "title": "Gateway Session 持久化问题：SOUL.md 未加载的真正原因",
     "date": "2026-07-02 23:45",
     "tags": [
