@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gateway Session 持久化问题：SOUL.md 未加载的真正原因 — Hermes 对话记录</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="back-link">← 返回列表</a>
+  <h1>Gateway Session 持久化问题：SOUL.md 未加载的真正原因</h1>
+  <div class="meta">
+    <span class="date">📅 </span>
+    
+    
+  </div>
+</header>
+<main class="conversation">
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (23:30)</div><div class="content">你现在是？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (23:30)</div><div class="content">仍然是默认 Hermes。SOUL.md 依然没加载。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (23:31)</div><div class="content">那我想就是没做到后者（重启 Gateway），后者的步骤是怎样的？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (23:31)</div><div class="content">找到了三个进程：旧 Gateway (PID 101756，6月30日起)、HTTP 预览服务器、CLI (PID 130996)。Gateway 没被重启过。<br><br>步骤：退出 CLI → kill 101756 → <code>hermes gateway run --replace &</code> → 启动 hermes。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (23:33)</div><div class="content">如何？检测一下现在的gateway进程<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (23:33)</div><div class="content">旧 Gateway 已死 (101756 gone)，新 Gateway 已上线 (PID 131094, 08:45)。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (23:34)</div><div class="content">我不懂你的意思？上一句话不就是一条QQ里的新消息吗？你现在是谁？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (23:34)</div><div class="content">从日志发现关键线索：所有 QQ 消息都被路由到 session <code>20260630_223553_e032d895</code>（6月30日创建，已 105 轮）。Gateway 重启了，但 session 没重建。SOUL.md 只在 session 创建时加载。<br><br>修复：发送 <code>/new</code> 强制创建新 session。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (23:35)</div><div class="content">我打了这个你会不保存吗？是的话你先保存<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (23:35)</div><div class="content">正在保存。<br></div></div>
+<hr class="conv-separator">
+</main>
+<script src="../script.js"></script>
+</body>
+</html>
