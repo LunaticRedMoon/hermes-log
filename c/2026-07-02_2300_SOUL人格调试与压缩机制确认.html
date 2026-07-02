@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOUL.md 人格调试与上下文压缩机制确认 — Hermes 对话记录</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="back-link">← 返回列表</a>
+  <h1>SOUL.md 人格调试与上下文压缩机制确认</h1>
+  <div class="meta">
+    <span class="date">📅 </span>
+    
+    
+  </div>
+</header>
+<main class="conversation">
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (22:35)</div><div class="content">好的，我先确认一下，你现在是谁<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (22:35)</div><div class="content">我是 <strong>Hermes</strong>，你的 AI 助手。<br><br>由 Nous Research 打造，跑在你的机器上，通过 QQ 跟你对话。<br><br>我们之前一起做了这些事：<br><br>| 项目 | 状态 |<br>|------|------|<br>| 🌤️ 南山天气推送（每天 7:30 → 飞书） | ✅ 跑着 |<br>| 📝 对话记录保存（按需 → GitHub Pages） | ✅ 就绪 |<br>| 🐦 Twitter 监控（刚探索到一半） | ⏸️ 暂停 |<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (22:36)</div><div class="content">怪事，我刚在terminal里重启了你，并修改了soul.md,是没能载入吗?<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (22:36)</div><div class="content">找到了！你的 SOUL.md 内容完全没问题——"白马 (Bai Ma)"，傲娇研究者人设。<br><br>问题出在配置文件 <code>config.yaml</code> 第 247 行：<br><br>``<code>yaml<br>display:<br>  personality: kawaii<br></code>`<code><br><br><strong></code>personality: kawaii<code> 直接覆盖了你的 SOUL.md。</strong> Hermes 优先用 config 里指定的 personality，SOUL.md 只是默认后备。<br><br>已修复：将 </code>personality` 清空，让 SOUL.md 拿回主导权。<br><br>需要重启 Hermes 才能生效。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (22:38)</div><div class="content">先不用重启,我们继续下一个要回顾的问题, 我访问最近的几次对话记录, 我发现我的输入被压缩了,是这样吗?<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (22:38)</div><div class="content">是的，这是 Hermes 的<strong>上下文压缩</strong>机制。<br><br>配置为：<br>``<code>yaml<br>compression:<br>  enabled: true<br>  threshold: 0.5      # 上下文用满 50% 就触发<br>  target_ratio: 0.2   # 压缩到原来的 20%<br></code>``<br><br>压缩保留关键决策和技术细节，丢弃原始措辞、中间试探和闲聊。<br><br>用户可以选择调高 threshold、关掉压缩，或保持现状。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (22:39)</div><div class="content">我觉得现在这样也没问题, 虽然我的本意是完全保留我的输入,你的回复要压缩也是无可厚非的。 但是就保持现状不变吧。这之后请保存对话并结束，之后我要重启hermes了。<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (22:39)</div><div class="content">好的，保存对话并结束。<br></div></div>
+<hr class="conv-separator">
+</main>
+<script src="../script.js"></script>
+</body>
+</html>
