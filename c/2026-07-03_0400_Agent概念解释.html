@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent 概念解释 — 实例 vs Session vs Memory — Hermes 对话记录</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header>
+  <a href="../index.html" class="back-link">← 返回列表</a>
+  <h1>Agent 概念解释 — 实例 vs Session vs Memory</h1>
+  <div class="meta">
+    <span class="date">📅 2026-07-03 04:00</span>
+    <span class="tag">Agent</span> <span class="tag">Session</span> <span class="tag">AIAgent</span> <span class="tag">架构</span> <span class="tag">概念</span> <span class="tag">Cron</span>
+    
+  </div>
+</header>
+<main class="conversation">
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (04:00)</div><div class="content">现在的你有多少agent在工作中？从你的建立至今我们有生成过任何一个agent吗<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (04:00)</div><div class="content">清算完毕：<br><br>| 类型 | 数量 | 详情 |<br>|------|:--:|------|<br>| <strong>Cron Job</strong> | <strong>1</strong> | <code>ec1e9b53a752</code> — 南山天气推送，每天 7:30 跑一次 |<br>| <strong>delegate_task 子 Agent</strong> | <strong>0</strong> | 从建立至今从未调用过 |<br>| <strong>常驻后台进程</strong> | <strong>0</strong> | 没有常驻 agent 实例 |<br><br>就一个 cron job，天气的。Twitter 那个方案我们还停留在纸上——没有写过任何脚本，没有创建过任何 cron job。<br><br>关于概念混淆：Cron job 不是"生成一个常驻 Agent"——它只是按时间表启动一次性的 Agent 会话，跑完就销毁。<br><br>``<code><br>不是：┌─────────────┐<br>      │ Agent 一直活着 │ ← 7×24 常驻<br>      │ 每分钟自己查  │<br>      └─────────────┘<br><br>而是：每分钟 → 点火 → Agent 会话启动 → 干完活 → 熄火 → 消失<br></code>`<code><br><br>Job A（</code>no_agent`）连 Agent 都不启动，就是个 shell 脚本定时执行。Job B 才启动 Agent 会话。两个本质都是 cron 记录，不是独立运行的 agent 进程。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (04:05)</div><div class="content">继续讨论，我也许需要你解释一下agent这个概念<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (04:05)</div><div class="content">在 Hermes 里，<strong>Agent 不是"一个活着的进程"——它是一个"推理循环"。</strong><br><br>核心代码在 <code>run_agent.py</code>，逻辑极其简单：<br><br>``<code><br>接收一条消息<br>  → 构建 system prompt（SOUL.md + 环境信息 + 工具列表 + 记忆）<br>  → 循环（最多 90 轮）：<br>      → 调 LLM API，把消息+工具发给模型<br>      → 模型返回"我要调终端" → 执行工具 → 把结果追加回对话 → 继续循环<br>      → 模型返回"我说完了" → 返回最终回答<br>  → Agent 结束，整个会话对象销毁<br></code>`<code><br><br><strong>Agent = 一次"接收输入 → 调用工具 → 输出结果"的完整推理过程。</strong> 它没有心跳、没有后台常驻、没有自己的进程 ID。每次跟你聊天，都是启动一个新的 Agent 会话。<br><br>#### 同一个 Agent，四种用法<br><br>同一个 </code>AIAgent<code> 类，在不同场景下被启动：<br><br>| 场景 | 谁来点火 | 生命周期 | 记忆/上下文 |<br>|------|----------|----------|------------|<br>| <strong>CLI 对话</strong> | 你敲 </code>hermes<code> 回车 | 你发一句 → Agent 处理 → 等下一句（session 持久化） | 有记忆、有 session 历史 |<br>| <strong>Gateway（QQ）</strong> | 你发一条 QQ 消息 | 消息到达 → Agent 启动 → 处理完 → 线程挂起等下一句 | 同上 |<br>| <strong>Cron Job</strong> | 调度器到点触发 | 到点 → Agent 启动 → 跑完 prompt → 输出结果 → 彻底消亡 | <strong>无记忆</strong>（</code>skip_memory=True<code>） |<br>| <strong>delegate_task</strong> | Hermes 调用 </code>delegate_task()<code> | 下令 → 子 Agent 启动 → 干完活 → 返回摘要 → 消亡 | 无记忆、无历史、只能看到传的 context |<br><br>#### 用图说话<br><br></code>`<code><br>你在 QQ 说了一句话<br>        │<br>        ▼<br>  ┌─────────────┐<br>  │ AIAgent 实例 │ ← 一个"Agent 会话"诞生了<br>  │             │<br>  │ 读 SOUL.md  │<br>  │ 加载记忆    │<br>  │ 加载工具    │<br>  │             │<br>  │ 调 LLM →    │<br>  │ 模型说"调工具"│ ← 可能走 1~N 轮工具循环<br>  │ 执行工具 →   │<br>  │ 工具结果返给 │<br>  │ 模型 →      │<br>  │ 模型说"回答" │<br>  │             │<br>  │ 输出结果    │<br>  └─────────────┘<br>        │<br>        ▼<br>    Agent 实例销毁<br>   （但 session 记录持久化到 SQLite）<br></code>`<code><br><br>#### 回到 Twitter 方案里的"Agent"<br><br>Job B 本质上就是 Cron Agent：<br><br></code>`<code><br>每分钟 7:30:00 → 调度器点火<br>                  ↓<br>            AIAgent 实例诞生<br>              → 读 trigger 文件<br>              → 发现是空的 → 直接返回"无新推文"<br>                  ↓<br>            实例销毁（这一分钟的生命结束）<br>                  <br>每分钟 7:31:00 → 又一个新的 AIAgent 实例诞生<br>              → 读 trigger 文件<br>              → 有内容！→ LLM 分析 → 飞书推送 → 删 trigger<br>                  ↓<br>            实例销毁<br></code>`<code><br><br>每分钟都是一个全新的 Agent，彼此不认识。它们之间唯一的通信方式是显式设计的外部状态（trigger 文件、上次 ID 记录等）。<br><br><strong>关键结论：</strong><br>- "生成一个 Agent"这个说法不够准确——Agent 不是长命的"进程"或"服务"，它就是一个按需点火、用完即灭的推理循环<br>- Job A（</code>no_agent`）连点火都不跳过 Agent 循环，直接跑脚本<br>- 我们至今只有一个 cron job（天气），它每天点火一次，一次跑不到 10 秒就灭了<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (04:10)</div><div class="content">所以这里我们每一次的交互应该还是同一个agent吗？直到当前session结束？<br></div></div>
+<div class="message msg-hermes"><div class="role">🤖 Hermes (04:10)</div><div class="content"><strong>不是同一个 Agent。</strong> 每个 turn 都是<strong>新的 Agent 实例</strong>，但共享<strong>同一个 Session</strong>。<br><br>``<code><br>你的 QQ 消息到达<br>        │<br>        ▼<br>  ┌──────────────────┐<br>  │ 新建 AIAgent 实例  │ ← 诞生<br>  │ 从 SQLite 加载     │<br>  │ 之前的对话历史     │<br>  │ 加载记忆、工具     │<br>  │ 调 LLM → 回答     │<br>  │ 把本轮对话写回     │<br>  │ SQLite            │<br>  └──────────────────┘<br>        │<br>        ▼<br>  Agent 实例销毁 ← 消亡<br>  <br>  ... 你思考中 ...<br>  <br>  下一条 QQ 消息到达<br>        │<br>        ▼<br>  ┌──────────────────┐<br>  │ 又一个新 AIAgent   │ ← 又一个全新实例<br>  │ 从 SQLite 加载     │<br>  │ 对话历史（含上一轮）│<br>  │ ...               │<br>  └──────────────────┘<br></code>`<code><br><br>#### 对比表<br><br>| 概念 | 生命周期 | 本质 |<br>|------|----------|------|<br>| <strong>AIAgent 实例</strong> | <strong>单次 turn</strong>（你发一句 → 处理完 → 销毁） | Python 对象，瞬时的 |<br>| <strong>Session</strong> | <strong>跨 turn</strong>（从第一条消息到 </code>/new<code> 或自然结束） | SQLite 里的对话历史记录 |<br>| <strong>Memory</strong> | <strong>跨 session</strong>（持久化在 </code>~/.hermes/` 里） | 你的偏好、环境信息等 |<br>| <strong>SOUL.md</strong> | <strong>跨一切</strong>（每次 Agent 实例诞生时重新读取） | 文件，修改即时生效 |<br><br>每次对话已经有多个 Agent 实例诞生又消亡——用户每发一句，Gateway 就 new 一个新的。但因为是连续的，每个新 Agent 实例都从 SQLite 里加载了之前的完整对话历史 + 从 Memory 加载了关于用户的记忆。所以它"知道"之前聊了什么。<br><br><strong>Agent 是容器，Session 是容器里的水。</strong> 每轮换一个新杯子，但把同一壶水倒进去——喝起来是一样的。<br></div></div>
+<hr class="conv-separator">
+<div class="message msg-user"><div class="role">👤 用户 (04:12)</div><div class="content">我需要你把对agent这部分解释的对话单独保存，这部分和我之前的理解差别很大，之后我们将继续Twitter方案</div></div>
+</main>
+<script src="../script.js"></script>
+</body>
+</html>
